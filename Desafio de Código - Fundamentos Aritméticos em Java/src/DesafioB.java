@@ -5,7 +5,6 @@ public class DesafioB{
     public static void main(String[] args) throws IOException{
 
         Scanner teclado = new Scanner(System.in);
-
         int valor = teclado.nextInt();
 
         for(int i = 1; i <= valor; i++){
