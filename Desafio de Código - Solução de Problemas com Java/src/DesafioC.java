@@ -1,96 +1,35 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Scanner;
+import java.util.Set;
+import java.util.TreeSet;
 
-public class DesafioC{
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        String linha = br.readLine();
-        List<Participante> participantes = new ArrayList<>();
-    
-        while (!linha.equals("FIM")) {
-            var participante = new Participante();
-            var entrada = linha.split(" ");
-            participante.setNome(entrada[0]);
-            participante.setAmigo(entrada[1].equals("SIM"));
-            participante.setOrdemInscricao(participantes.size());
-            var participanteExistente = participantes.stream()
-                    .filter(p -> p.getNome().equals(participante.getNome()))
-                    .findFirst()
-                    .orElse(null);
-                    
-            if(participanteExistente == null) {
-                participantes.add(participante);
-            }
-            linha = br.readLine();
-        }
-    
-        var participantesOrdenados = participantes.stream().sorted(Comparator
-                .comparing(Participante::isAmigo).reversed()
-                .thenComparing(Participante::getNome)).collect(Collectors.toList());
-    
-        participantesOrdenados.forEach(p -> {
-            if(!p.getNome().equals("Abhay")) {
-                System.out.println(p.getNome());
-            }
-        });
-    
-        List<Participante> amigos = participantesOrdenados.stream().filter(Participante::isAmigo).collect(Collectors.toList());
-        Participante escolhido = null;
-    
-        for (Participante p : amigos) {
-            if(escolhido == null) {
-                escolhido = p;
-            } else if (escolhido.getNome().length() < p.getNome().length()) {
-                escolhido = p;
-            } else if (escolhido.getNome().length() == p.getNome().length()
-                    && escolhido.getOrdemInscricao() > p.getOrdemInscricao()) {
-                escolhido = p;
+public class DesafioC {
+    public static void main(String[] args) {
+
+        Scanner teclado = new Scanner(System.in);
+
+        Set<String> alunosAmigos = new TreeSet<>();
+        Set<String> alunosNaoAmigos = new TreeSet<>();
+        String vencedor = "";
+        String entrada;
+
+        while (!"FIM".equals(entrada = teclado.nextLine())) {
+            String nomeAluno = entrada.split(" ")[0];
+            boolean isAmigo = "SIM".equals(entrada.split(" ")[1]);
+            if(isAmigo) {
+                alunosAmigos.add(nomeAluno);
+                if (nomeAluno.length() > vencedor.length())
+                    vencedor = nomeAluno;
+            } else {
+                alunosNaoAmigos.add(nomeAluno);
             }
         }
-    
-        System.out.println("");
-        System.out.println("Amigo do Pablo:");
-        System.out.println(escolhido.getNome());
-    }
-    
-    public static class Participante {
-        private String nome;
-        private boolean amigo;
-        private int ordemInscricao;
-        
-        public String getNome() {
-            return nome;
-        }
-        
-        public void setNome(String nome) {
-            this.nome = nome;
-        }
-        
-        public boolean isAmigo() {
-            return amigo;
-        }
-        
-        public void setAmigo(boolean amigo) {
-            this.amigo = amigo;
-        }
-        
-        public int getOrdemInscricao() {
-            return ordemInscricao;
-        }
-        
-        public void setOrdemInscricao(int ordemInscricao) {
-            this.ordemInscricao = ordemInscricao;
-        }
-        
-        @Override
-        public String toString() {
-            return nome;
-        }
+
+        alunosAmigos.forEach(System.out::println);
+        alunosNaoAmigos.forEach(System.out::println);
+        System.out.println("\nAmigo do Pablo:");
+        System.out.println(vencedor);
+
+        teclado.close();
     }
 }
 
